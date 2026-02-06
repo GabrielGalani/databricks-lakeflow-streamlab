@@ -1,5 +1,7 @@
 # databricks-lakeflow-streamlab
 
+Lakeflow StreamLab demonstrates an end-to-end streaming data pipeline using Databricks Lakeflow (Delta Live Tables), focusing on schema evolution, data quality, and real-time analytics.
+
 ┌────────────────────┐
 │ Streaming Generator│
 │ (PySpark)          │

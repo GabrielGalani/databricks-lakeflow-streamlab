@@ -1,0 +1,20 @@
+bundle:
+  name: lakeflow-streamlab
+
+targets:
+  dev:
+    workspace:
+      host: https://dbc-xxxxxxxx.cloud.databricks.com
+
+resources:
+  pipelines:
+    sales_pipeline:
+      name: lakeflow_streaming_pipeline
+      target: dev
+      libraries:
+        - file:
+            path: pipelines/bronze_dlt.py
+        - file:
+            path: pipelines/silver_dlt.py
+        - file:
+            path: pipelines/gold_dlt.py
