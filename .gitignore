@@ -11,7 +11,12 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-.Python
+databricks/
+databricks
+.vscode/
+.vscode
+typings/
+Python
 build/
 develop-eggs/
 dist/
