@@ -13,4 +13,8 @@ CREATE SCHEMA IF NOT EXISTS cdc
 COMMENT 'CDC processing layer';
 
 CREATE SCHEMA IF NOT EXISTS utils
-COMMENT 'Utility objects and functions';
+COMMENT 'Utility objects and functions';             
+
+CREATE SCHEMA IF NOT EXISTS raw
+COMMENT 'Raw data';             
+
