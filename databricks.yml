@@ -5,7 +5,7 @@ variables:
   catalog:
     default: olist_lakehouse
   schema:
-    default: default
+    default: raw
 
 targets:
   dev:
@@ -20,21 +20,26 @@ resources:
       catalog: ${var.catalog}
       target: ${var.schema}
       serverless: true
+      photon: true
+      channel: CURRENT
+      continuous: false
       libraries:
-        - file: ./src/pipelines/bronze
-        - file: ./src/pipelines/silver
+        # Aqui usamos a sintaxe exata que funcionou na sua interface
+        - glob:
+            include: ./src/pipelines/bronze/**
+        - glob:
+            include: ./src/pipelines/silver/**
 
-      # clusters:
-      #   - label: default
-      #     autoscale:
-      #       min_workers: 1
-      #       max_workers: 2
-
-jobs:
-  initial_setup:
-    name: "[${bundle.target}] Olist Infrastructure Setup"
-    tasks:
-      - task_key: run_setup_scripts
-        environment_key: Default
-        spark_python_task:
-          python_file: ./src/setup/run.py
+  jobs:
+    initial_setup:
+      name: "[${bundle.target}] Olist Infrastructure Setup"
+      # O erro do 'Default' some aqui, pois definimos o environment no nível do Job
+      environments:
+        - environment_key: Default
+          spec:
+            client: "1" # Força o uso do Serverless para o Job
+      tasks:
+        - task_key: run_setup_scripts
+          environment_key: Default
+          spark_python_task:
+            python_file: ./src/setup/run.py

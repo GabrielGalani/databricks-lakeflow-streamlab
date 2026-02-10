@@ -1,15 +1,12 @@
-create or refresh materialized view ${catalog}.silver.silver_orders_enriched
+create or refresh materialized view olist_lakehouse.silver.silver_orders_enriched
 comment 'silver layer - enriched orders (1 row per order)'
 tblproperties ('quality' = 'silver')
 as
 with order_items_agg as (
     select
         order_id,
-        count(*) as total_items,
-        sum(price) as total_items_price,
-        sum(freight_value) as total_freight_value,
-        sum(price + freight_value) as order_items_total_value
-    from olist_lakehouse.silver.silver_order_items
+        count(*) as total_items
+    from olist_lakehouse.silver.silver_orders_items
     group by order_id
 ),
 payments_agg as (
@@ -41,11 +38,7 @@ select
     c.customer_state,
     c.customer_city,
     c.customer_zip_code_prefix,
-    c.region as customer_region,
     i.total_items,
-    i.total_items_price,
-    i.total_freight_value,
-    i.order_items_total_value,
     p.total_payments,
     p.total_payment_value,
     p.used_credit_card,

@@ -1,4 +1,4 @@
-create or refresh streaming live table ${catalog}.bronze.bronze_order_payments
+create or refresh streaming live table olist_lakehouse.bronze.bronze_order_payments
 comment 'bronze layer - raw order payment data ingested via auto loader'
 tblproperties (
   'quality' = 'bronze',
@@ -12,7 +12,7 @@ select
   _metadata.file_modification_time as _file_modified_at,
   current_timestamp() as _ingested_at
 from stream read_files(
-  "/volumes/olist_lakehouse/raw/olist/order_payments/",
+  "/Volumes/olist_lakehouse/raw/olist/order_payments",
   format => "csv",
   header => true,
   inferschema => true,

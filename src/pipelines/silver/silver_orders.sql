@@ -1,4 +1,4 @@
-create or refresh streaming live table ${catalog}.silver.silver_orders
+create or refresh streaming live table olist_lakehouse.silver.silver_orders
 (
     constraint valid_order_id expect (order_id is not null and length(trim(order_id)) = 32) on violation drop row,
     constraint valid_customer_id expect (customer_id is not null and length(trim(customer_id)) = 32)  on violation drop row,
@@ -26,5 +26,5 @@ select
     _ingested_at,
     _rescued_data,
     current_timestamp() as _processed_at
-from stream live.bronze_orders
+from stream olist_lakehouse.bronze.bronze_orders
 where _rescued_data is null;

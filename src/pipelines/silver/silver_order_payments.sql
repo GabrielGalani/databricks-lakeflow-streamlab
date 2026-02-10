@@ -1,4 +1,4 @@
-create or refresh streaming live table ${catalog}.silver.silver_order_payments
+create or refresh streaming live table olist_lakehouse.silver.silver_order_payments
 (
   constraint valid_order_id expect (order_id is not null and length(trim(order_id)) = 32) on violation drop row,
   constraint valid_payment_sequential expect (payment_sequential is not null and payment_sequential > 0) on violation drop row,
@@ -30,5 +30,5 @@ select
     _ingested_at,
     _rescued_data,
     current_timestamp() as _processed_at
-from stream live.bronze_order_payments
+from stream olist_lakehouse.bronze.bronze_order_payments
 where _rescued_data is null;

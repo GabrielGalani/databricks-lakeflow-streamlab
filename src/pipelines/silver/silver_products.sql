@@ -1,4 +1,4 @@
-create or refresh streaming live table ${catalog}.silver.silver_products
+create or refresh streaming live table olist_lakehouse.silver.silver_products
 (
   constraint valid_product_id expect (product_id is not null and length(trim(product_id)) = 32) on violation drop row,
   constraint valid_category expect (product_category_name is not null and trim(product_category_name) <> '') on violation drop row,
@@ -34,10 +34,8 @@ with deduplicated as (
     _source_file,
     _file_modified_at,
     _ingested_at,
-    _rescued_data,
-    row_number() over (partition by product_id order by _ingested_at desc) as rn
-
-  from stream live.bronze_products
+    _rescued_data
+  from stream olist_lakehouse.bronze.bronze_products
 )
 
 select
@@ -57,4 +55,3 @@ select
   _rescued_data
 
 from deduplicated
-where rn = 1;

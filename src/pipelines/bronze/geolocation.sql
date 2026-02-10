@@ -1,4 +1,4 @@
-CREATE OR REFRESH STREAMING LIVE TABLE ${catalog}.bronze.bronze_geolocation
+CREATE OR REFRESH STREAMING LIVE TABLE olist_lakehouse.bronze.bronze_geolocation
 COMMENT 'Bronze layer - raw geolocation data ingested via Auto Loader'
 TBLPROPERTIES (
   'quality' = 'bronze',
@@ -11,7 +11,7 @@ SELECT
   _metadata.file_modification_time AS _file_modified_at,
   current_timestamp() AS _ingested_at
 FROM STREAM read_files(
-  "/Volumes/olist_lakehouse/raw/olist/geolocation/",
+  "/Volumes/olist_lakehouse/raw/olist/geolocation",
   format => "csv",
   header => true,
   inferSchema => true,
