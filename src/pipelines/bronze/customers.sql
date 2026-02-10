@@ -1,20 +1,20 @@
-CREATE OR REFRESH STREAMING LIVE TABLE bronze_customers
-COMMENT 'Bronze layer - raw customer data ingested via Auto Loader'
-TBLPROPERTIES (
+create or refresh streaming live table bronze.bronze_customers
+comment 'bronze layer - raw customer data ingested via auto loader'
+tblproperties (
   'quality' = 'bronze',
-  'pipelines.autoOptimize.managed' = 'true',
-  'pipelines.autoOptimize.zOrderCols' = 'customer_id'
+  'pipelines.autooptimize.managed' = 'true',
+  'pipelines.autooptimize.zordercols' = 'customer_id'
 )
-AS
-SELECT
+as
+select
   *,
-  _metadata.file_path AS _source_file,
-  _metadata.file_modification_time AS _file_modified_at,
-  current_timestamp() AS _ingested_at
-FROM STREAM read_files(
-  "/Volumes/olist_lakehouse/raw/olist/customers/",
+  _metadata.file_path as _source_file,
+  _metadata.file_modification_time as _file_modified_at,
+  current_timestamp() as _ingested_at
+from stream read_files(
+  "/volumes/olist_lakehouse/raw/olist/customers/",
   format => "csv",
   header => true,
-  inferSchema => true,
-  rescuedDataColumn => "_rescued_data"
+  inferschema => true,
+  rescueddatacolumn => "_rescued_data"
 );
