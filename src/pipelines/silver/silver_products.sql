@@ -1,4 +1,4 @@
-create or refresh streaming live table silver_products
+create or refresh streaming live table silver.silver_products
 (
   constraint valid_product_id expect (product_id is not null and length(trim(product_id)) = 32) on violation drop row,
   constraint valid_category expect (product_category_name is not null and trim(product_category_name) <> '') on violation drop row,

@@ -1,4 +1,4 @@
-create or refresh streaming live table silver_orders
+create or refresh streaming live table silver.silver_orders
 (    
   constraint valid_order_id expect (order_id is not null and length(trim(order_id)) = 32) on violation drop row,
   constraint valid_customer_id expect (customer_id is not null and length(trim(customer_id)) = 32) on violation drop row,
