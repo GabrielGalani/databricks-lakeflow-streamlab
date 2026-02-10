@@ -1,4 +1,4 @@
-create or refresh materialized view silver.silver_orders_enriched
+create or refresh materialized view ${catalog}.silver.silver_orders_enriched
 comment 'silver layer - enriched orders (1 row per order)'
 tblproperties ('quality' = 'silver')
 as

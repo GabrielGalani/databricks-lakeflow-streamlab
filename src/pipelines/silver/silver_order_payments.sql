@@ -1,4 +1,4 @@
-create or refresh streaming live table silver.silver_order_payments
+create or refresh streaming live table ${catalog}.silver.silver_order_payments
 (
   constraint valid_order_id expect (order_id is not null and length(trim(order_id)) = 32) on violation drop row,
   constraint valid_payment_sequential expect (payment_sequential is not null and payment_sequential > 0) on violation drop row,

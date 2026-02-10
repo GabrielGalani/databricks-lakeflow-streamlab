@@ -1,4 +1,4 @@
-CREATE OR REFRESH STREAMING LIVE TABLE bronze.bronze_geolocation
+CREATE OR REFRESH STREAMING LIVE TABLE ${catalog}.bronze.bronze_geolocation
 COMMENT 'Bronze layer - raw geolocation data ingested via Auto Loader'
 TBLPROPERTIES (
   'quality' = 'bronze',

@@ -1,4 +1,4 @@
-create or refresh streaming live table silver.silver_customers
+create or refresh streaming live table ${catalog}.silver.silver_customers
 (
   constraint valid_customer_id expect (customer_id is not null and length(trim(customer_id)) = 32) on violation drop row,
   constraint valid_customer_unique_id expect (customer_unique_id is not null and length(trim(customer_unique_id)) = 32) on violation drop row,

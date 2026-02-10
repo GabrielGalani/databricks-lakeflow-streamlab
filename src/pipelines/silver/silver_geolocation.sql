@@ -1,4 +1,4 @@
-create or refresh materialized view silver.silver_geolocation
+create or refresh materialized view ${catalog}.silver.silver_geolocation
 comment 'cleansed and deduplicated geolocation reference data with averaged coordinates'
 tblproperties (
     'quality' = 'silver'

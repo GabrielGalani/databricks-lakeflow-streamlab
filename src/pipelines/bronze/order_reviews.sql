@@ -1,4 +1,4 @@
-create or refresh streaming live table bronze.bronze_order_reviews
+create or refresh streaming live table ${catalog}.bronze.bronze_order_reviews
 comment 'bronze layer - raw order review data ingested via auto loader'
 tblproperties (
   'quality' = 'bronze',
