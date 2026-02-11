@@ -29,6 +29,8 @@ resources:
             include: ./src/pipelines/bronze/**
         - glob:
             include: ./src/pipelines/silver/**
+        - glob:
+            include: ./src/pipelines/gold/**
 
   jobs:
     initial_setup:
