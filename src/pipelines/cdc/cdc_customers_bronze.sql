@@ -1,4 +1,4 @@
-create table if not exists olist_lakehouse.bronze.cdc_customers
+create or refresh streaming live table olist_lakehouse.bronze.cdc_customers
 using delta
 comment 'CDC bronze table for customers. Stores all customer change events (insert, update, delete).'
 tblproperties (
@@ -22,7 +22,7 @@ select
     current_timestamp() AS _ingested_at,
     _rescued_data
 from stream read_files(
-    "/volumes/olist_lakehouse/raw/olist/customers/",
+    "/Volumes/olist_lakehouse/raw/olist/customers",
     format => "csv",
     header => true,
     inferschema => true,

@@ -30,7 +30,7 @@ resources:
         - glob:
             include: ./src/pipelines/silver/**
         - glob:
-            include: ./src/pipelines/gold/**
+            include: ./src/pipelines/cdc/**
 
   jobs:
     initial_setup:

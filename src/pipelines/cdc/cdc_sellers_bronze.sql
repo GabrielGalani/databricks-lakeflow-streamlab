@@ -20,7 +20,7 @@ select
     current_timestamp() as _ingested_at,
     _rescued_data
 from stream read_files(
-    "/volumes/olist_lakehouse/raw/olist/sellers/",
+    "/Volumes/olist_lakehouse/raw/olist/sellers",
     format => "csv",
     header => true,
     inferschema => true,
