@@ -1,107 +1,98 @@
 # 🚀 Data Pipeline: E-commerce Streaming & Medallion Architecture
 
-## 🛠️ Pré-requisitos
+## 🛠️ Prerequisites
 
-Para executar e testar este projeto, você precisará de um dos seguintes ambientes configurados:
+To run and test this project, you will need one of the following environments configured:
 
-* **Ambiente de Desenvolvimento:** VS Code com a extensão do Databricks instalada e configurada via **Databricks Connect**.
-* **Ambiente de Execução:** Uma conta ativa no Databricks (pode ser a **Community/Free Edition** para testes de lógica, embora o suporte a DLT e Bundles seja completo em instâncias **Premium/Enterprise**).
-* **Databricks CLI:** Instalado e autenticado para realizar o deploy dos Assets (DABs).
+* **Development Environment:** VS Code with the Databricks extension installed and configured via **Databricks Connect**.
+* **Execution Environment:** An active Databricks account (the **Community/Free Edition** can be used for logic testing, although full support for DLT and Bundles is available in **Premium/Enterprise** instances).
+* **Databricks CLI:** Installed and authenticated to perform Asset Bundle (DABs) deployment.
 
-## 1. Descrição do Projeto
-Este projeto implementa um pipeline de dados de ponta a ponta focado em e-commerce, utilizando **Delta Live Tables (DLT)** para processamento em tempo real (Streaming). O sistema é projetado para escalar a ingestão de dados brutos até a entrega de camadas refinadas para análise, garantindo integridade e governança.
+## 1. Project Description
+This project implements an end-to-end data pipeline focused on e-commerce, utilizing **Delta Live Tables (DLT)** for real-time processing (Streaming). The system is designed to scale from raw data ingestion to the delivery of refined layers for analysis, ensuring data integrity and governance.
 
-## 2. Objetivo
-O objetivo principal é demonstrar a implementação da **Arquitetura Medalhão** e do **Change Data Capture (CDC)** no Databricks, automatizando a criação de infraestrutura via **Databricks Asset Bundles (DABs)** e garantindo a qualidade dos dados em cada etapa do fluxo.
+## 2. Objective
+The primary goal is to demonstrate the implementation of the **Medallion Architecture** and **Change Data Capture (CDC)** within Databricks, automating infrastructure creation via **Databricks Asset Bundles (DABs)** and ensuring data quality at every stage of the flow.
 
-## 3. Arquitetura Medalhão
-A organização dos dados segue o padrão Medalhão, garantindo que a qualidade aumente conforme o dado flui pelas camadas:
+## 3. Medallion Architecture
+Data organization follows the Medallion standard, ensuring that quality increases as data flows through the layers:
 
-![Arquitetura Medalhão](./Images/Medallion_architecture.png)
+![Medallion Architecture](./Images/Medallion_architecture.png)
 
-| Camada | Propósito | Qualidade de Dados (Expectations) |
+| Layer | Purpose | Data Quality (Expectations) |
 | :--- | :--- | :--- |
-| **Bronze** | Ingestão bruta via Auto Loader | **WARN**: Monitoramento de inconformidades |
-| **Silver** | Validação, limpeza e enriquecimento | **DROP**: Remoção automática de dados inválidos |
-| **Gold** | KPIs de negócio e agregações finais | **FAIL**: Validação rigorosa e crítica |
+| **Bronze** | Raw ingestion via Auto Loader | **WARN**: Monitor inconsistencies |
+| **Silver** | Validation, cleansing, and enrichment | **DROP**: Automatically remove invalid data |
+| **Gold** | Business KPIs and final aggregations | **FAIL**: Strict and critical validation |
 
 ### 3.1 Unity Catalog
-O **Unity Catalog** atua como a camada unificada de governança para o Lakehouse.
+**Unity Catalog** serves as the unified governance layer for the Lakehouse.
 
 ![Unity Catalog](./Images/Unity_catalog.png)
 
-Ele permite o gerenciamento centralizado de linhagem (*lineage*), controle de acesso (ACLs) e auditoria de todos os ativos de dados (tabelas, volumes e funções) em nível de metastore.
+It enables centralized management of data lineage, access control (ACLs), and auditing of all data assets (tables, volumes, and functions) at the metastore level.
 
-## 4. Tecnologias Utilizadas
-* **Databricks Delta Live Tables (DLT):** Orquestração declarativa e governança do pipeline.
-* **Spark Structured Streaming:** Processamento escalável em tempo real.
-* **Unity Catalog:** Governança unificada e segurança de dados.
-* **Python & SQL:** Desenvolvimento das transformações e lógicas de negócio.
-* **Change Data Capture (CDC):** Captura eficiente de alterações em tabelas dimensionais (Clientes, Produtos).
-* **Auto Loader:** Ingestão incremental e eficiente de arquivos na camada Bronze.
-* **Databricks Asset Bundles (DABs):** Ferramenta de infraestrutura como código (IaC) para deploy e CI/CD.
+## 4. Technologies Used
+* **Databricks Delta Live Tables (DLT):** Declarative orchestration and pipeline governance.
+* **Spark Structured Streaming:** Scalable real-time processing.
+* **Unity Catalog:** Unified governance and data security.
+* **Python & SQL:** Development of transformations and business logic.
+* **Change Data Capture (CDC):** Efficient capture of changes in dimensional tables (Customers, Products).
+* **Auto Loader:** Incremental and efficient file ingestion into the Bronze layer.
+* **Databricks Asset Bundles (DABs):** Infrastructure as Code (IaC) tool for deployment and CI/CD.
 
-## 📊 Monitoramento e Execução
+## 📊 Monitoring and Execution
 
-Após iniciar os processos, você poderá acompanhar o status de execução diretamente na interface do Databricks. Abaixo estão as visualizações esperadas para cada etapa:
+Once the processes are started, you can monitor the execution status directly within the Databricks interface. Below are the expected visualizations for each stage:
 
-### Execução do Job (Orquestração)
-O Job coordena a execução dos bundles e o acionamento dos fluxos de dados.
-![Execução do Job](./Images/log_job.png)
+### Job Execution (Orchestration)
+The Job coordinates bundle execution and triggers the data flows.
+![Job Execution](./Images/log_job.png)
 
-### Pipeline Medalhão (Streaming DLT)
-Visualização do grafo de dependências (DAG) processando os dados das camadas Bronze e Silver em tempo real.
-![Pipeline Medalhão](./Images/pipeline_medallion.png)
+### Medallion Pipeline (Streaming DLT)
+Visualization of the dependency graph (DAG) processing Bronze and Silver layer data in real-time.
+![Medallion Pipeline](./Images/pipeline_medallion.png)
 
-### Pipeline CDC (Change Data Capture)
-Fluxo de sincronização de mudanças para manter as tabelas dimensionais atualizadas.
-![Pipeline CDC](./Images/pipeline_cdc.png)
+### CDC Pipeline (Change Data Capture)
+Change synchronization flow to keep dimensional tables up to date.
+![CDC Pipeline](./Images/pipeline_cdc.png)
 
 ---
 
-## 5. Estrutura do Projeto
+## 5. Project Structure
 ```text
 src/
 ├── pipelines/
-│   ├── bronze/          # Scripts de ingestão inicial (Raw)
-│   ├── cdc/             # Lógica de processamento CDC
-│   └── silver/          # Transformações e enriquecimento
-├── setup/               # Scripts de infraestrutura e permissões
-│   ├── run.py           # Orquestrador de setup inicial
+│   ├── bronze/          # Initial ingestion scripts (Raw)
+│   ├── cdc/             # CDC processing logic
+│   └── silver/          # Transformations and enrichment
+├── setup/               # Infrastructure and permissions scripts
+│   ├── run.py           # Initial setup orchestrator
 │   └── ...
-└── utils/               # Utilitários e gerador de dados
+└── utils/               # Utilities and data generator
     └── data_generator.py
 ```
 
-## 6. Como Rodar o Projeto
-Siga os passos abaixo para configurar o ambiente e realizar o deploy:
+## 6. How to Run the Project
+Follow the steps below to configure the environment and perform the deployment
 
-### Passo 1: Clonar o Repositório
+### Step 1: Clone the Repository
 ```
-git clone [[https://github.com/GabrielGalani/databricks-lakeflow-streamlab.git](https://github.com/seu-usuario/seu-repositorio.git)]
+git clone https://github.com/GabrielGalani/databricks-lakeflow-streamlab.git
 cd databricks-lakeflow-streamlab
 ```
 
-### Passo 2: Configuração Inicial (Setup)
-Execute o script de setup para preparar o Unity Catalog (schemas, volumes e permissões):
+### Step 2: Initial Configuration (Setup)
+Run the setup script to prepare the Unity Catalog (schemas, volumes, and permissions):
 ```python
 ./src/setup/run.py
 ```
 
-### Passo 3: Deploy via Databricks Asset Bundles
-Certifique-se de que o Databricks CLI está configurado e execute o deploy para criar automaticamente os recursos (Workflows e DLT):
+### Step 3: Deploy via Databricks Asset Bundles
+Ensure the Databricks CLI is configured and run the deploy command to automatically create the resources (Workflows and DLT):
 
-### Passo 4: Execução dos Pipelines
-Com o deploy concluído, execute os pipelines na seguinte ordem de dependência:
-- Data Generator: Para popular os volumes com dados iniciais.
-- Medallion: Ingestão e transformação das camadas Bronze e Silver.
-- CDC: Atualização das dimensões com base nas mudanças capturadas.
-
-
-
-
-
-
-
-
-
+Step 4: Pipeline Execution
+With the deployment complete, execute the pipelines in the following order of dependency:
+- Data Generator: To populate volumes with initial data.
+- Medallion: Ingestion and transformation of Bronze and Silver layers.
+- CDC: Updating dimensions based on captured changes.
