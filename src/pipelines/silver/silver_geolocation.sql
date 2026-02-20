@@ -1,4 +1,4 @@
-create or refresh materialized view olist_lakehouse.silver.silver_geolocation
+create or refresh materialized view ${catalog}.${layer_silver}.silver_geolocation
 comment 'cleansed and deduplicated geolocation reference data with averaged coordinates'
 tblproperties (
     'quality' = 'silver'
@@ -12,7 +12,7 @@ with deduplicated as (
         avg(cast(geolocation_lat as double)) as latitude,
         avg(cast(geolocation_lng as double)) as longitude,
         count(*) as sample_count
-    from olist_lakehouse.bronze.bronze_geolocation
+    from ${catalog}.${layer_bronze}.bronze_geolocation
     where 
       geolocation_zip_code_prefix is not null
       and geolocation_lat is not null

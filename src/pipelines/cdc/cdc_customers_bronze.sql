@@ -1,4 +1,4 @@
-create or refresh streaming live table olist_lakehouse.bronze.cdc_customers_bronze
+create or refresh streaming live table ${catalog}.${layer_cdc}.cdc_customers_bronze
 using delta
 comment 'CDC bronze table for customers. Stores all customer change events (insert, update, delete).'
 tblproperties (

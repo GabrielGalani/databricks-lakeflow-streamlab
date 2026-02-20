@@ -8,6 +8,12 @@
       default: default
     bronze_layer:
       default: bronze
+    silver_layer:
+      default: silver
+    gold_layer:
+      default: gold
+    cdc_layer:
+      default: cdc
 
   targets:
     dev:
@@ -22,9 +28,10 @@
         catalog: ${var.catalog}
         target: ${var.schema}
         configuration:
-          layer_bronze: "bronze"
-          layer_silver: "silver"
-          layer_gold: "gold"
+          layer_bronze: ${var.bronze_layer}
+          layer_silver: ${var.silver_layer}
+          layer_gold: ${var.gold_layer}
+          catalog: ${var.catalog}
         serverless: true
         photon: true
         channel: CURRENT
@@ -42,9 +49,11 @@
         catalog: ${var.catalog}
         target: ${var.schema}
         configuration:
-          layer_bronze: "bronze"
-          layer_silver: "silver"
-          layer_gold: "gold"
+          layer_bronze: ${var.bronze_layer}
+          layer_silver: ${var.silver_layer}
+          layer_gold: ${var.gold_layer}
+          layer_cdc: ${var.cdc_layer}
+          catalog: ${var.catalog}
         serverless: true
         photon: true
         channel: CURRENT

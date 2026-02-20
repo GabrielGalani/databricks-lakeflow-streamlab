@@ -1,4 +1,4 @@
-create or refresh streaming live table olist_lakehouse.silver.silver_orders_items
+create or refresh streaming live table ${catalog}.${layer_silver}.silver_orders_items
 (    
   constraint valid_order_id expect (order_id is not null and length(trim(order_id)) = 32) on violation drop row,
   constraint valid_customer_id expect (customer_id is not null and length(trim(customer_id)) = 32) on violation drop row,
@@ -28,6 +28,6 @@ select
     o._ingested_at,
     o._rescued_data,
     current_timestamp() as _processed_at
-from stream olist_lakehouse.bronze.bronze_orders o
-left join olist_lakehouse.bronze.bronze_order_items oi on (oi.order_id = o.order_id)
+from stream ${catalog}.${layer_bronze}.bronze_orders o
+left join ${catalog}.${layer_bronze}.bronze_order_items oi on (oi.order_id = o.order_id)
 where o._rescued_data is null;

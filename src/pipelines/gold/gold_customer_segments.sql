@@ -1,4 +1,4 @@
-CREATE OR REFRESH MATERIALIZED VIEW gold_customer_segments
+CREATE OR REFRESH MATERIALIZED VIEW ${catalog}.${layer_gold}.gold_customer_segments
 COMMENT 'Segmentação de clientes baseada em comportamento de compra (RFM)'
 TBLPROPERTIES ('quality' = 'gold')
 AS
@@ -8,5 +8,5 @@ SELECT
     datediff(current_date(), max(order_purchase_timestamp)) as recency_days,
     count(distinct order_id) as frequency,
     sum(total_payment_value) as monetary_value
-FROM olist_lakehouse.silver.silver_orders_enriched
+FROM ${catalog}.${layer_silver}.silver_orders_enriched
 GROUP BY 1;

@@ -1,4 +1,4 @@
-create or refresh streaming live table olist_lakehouse.silver.silver_sellers
+create or refresh streaming live table ${catalog}.${layer_silver}.silver_sellers
 (
   constraint valid_seller_id expect (seller_id is not null and length(trim(seller_id)) = 32) on violation drop row,
   constraint valid_seller_state expect (seller_state is not null and trim(seller_state) <> '') on violation drop row,
@@ -22,7 +22,7 @@ with deduplicated as (
     _file_modified_at,
     _ingested_at,
     _rescued_data
-  from stream olist_lakehouse.bronze.bronze_sellers
+  from stream ${catalog}.${layer_bronze}.bronze_sellers
 )
 
 select
