@@ -1,47 +1,51 @@
-bundle:
-  name: olist-data-platform
+  bundle:
+    name: olist-data-platform
 
-variables:
-  catalog:
-    default: olist_lakehouse
-  schema:
-    default: raw
+  variables:
+    catalog:
+      default: olist_lakehouse
+    schema:
+      default: default
+    bronze_layer:
+      default: bronze
 
-targets:
-  dev:
-    default: true
-    workspace:
-      host: https://dbc-0856e78c-d501.cloud.databricks.com
+  targets:
+    dev:
+      default: true
+      workspace:
+        host: https://dbc-0856e78c-d501.cloud.databricks.com
 
-resources:
-  pipelines:
-    olist_pipeline:
-      name: "[${bundle.target}] Olist Medallion Pipeline"
-      catalog: ${var.catalog}
-      target: ${var.schema}
-      serverless: true
-      photon: true
-      channel: CURRENT
-      continuous: false
-      libraries:
-        # Aqui usamos a sintaxe exata que funcionou na sua interface
-        - glob:
-            include: ./src/pipelines/bronze/**
-        - glob:
-            include: ./src/pipelines/silver/**
-        - glob:
-            include: ./src/pipelines/cdc/**
+  resources:
+    pipelines:
+      olist_pipeline:
+        name: "[${bundle.target}] Olist Medallion Pipeline"
+        catalog: ${var.catalog}
+        target: ${var.schema}
+        configuration:
+          layer_bronze: "bronze"
+          layer_silver: "silver"
+          layer_gold: "gold"
+        serverless: true
+        photon: true
+        channel: CURRENT
+        continuous: false
+        libraries:
+          - glob:
+              include: ./src/pipelines/bronze/**
+          - glob:
+              include: ./src/pipelines/silver/**
+          - glob:
+              include: ./src/pipelines/cdc/**
 
-  jobs:
-    initial_setup:
-      name: "[${bundle.target}] Olist Infrastructure Setup"
-      # O erro do 'Default' some aqui, pois definimos o environment no nível do Job
-      environments:
-        - environment_key: Default
-          spec:
-            client: "1" # Força o uso do Serverless para o Job
-      tasks:
-        - task_key: run_setup_scripts
-          environment_key: Default
-          spark_python_task:
-            python_file: ./src/setup/run.py
+    jobs:
+      initial_setup:
+        name: "[${bundle.target}] Olist Infrastructure Setup"
+        environments:
+          - environment_key: Default
+            spec:
+              client: "1"
+        tasks:
+          - task_key: run_setup_scripts
+            environment_key: Default
+            spark_python_task:
+              python_file: ./src/setup/run.py

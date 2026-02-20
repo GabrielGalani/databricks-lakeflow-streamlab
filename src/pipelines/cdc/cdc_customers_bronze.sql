@@ -1,4 +1,4 @@
-create or refresh streaming live table olist_lakehouse.bronze.cdc_customers
+create or refresh streaming live table olist_lakehouse.bronze.cdc_customers_bronze
 using delta
 comment 'CDC bronze table for customers. Stores all customer change events (insert, update, delete).'
 tblproperties (
@@ -10,19 +10,23 @@ as
 select
     customer_id,
     customer_unique_id,
-    initcap(trim(customer_city)) as customer_city,
-    upper(trim(customer_state)) as customer_state,
-    cast(customer_zip_code_prefix as int) as customer_zip_code_prefix,
+    customer_city,
+    customer_state,
+    customer_zip_code_prefix,
+    customer_email,
+    customer_name,
+    customer_phone,
 
     -- CDC metadata
-    'I' AS cdc_operation,
+    CAST(sequence_number AS BIGINT) AS sequence_number,
+    UPPER(TRIM(operation)) AS operation,
     _metadata.file_path AS _source_file,
     _metadata.file_modification_time AS _file_modified_at,
     current_timestamp() AS cdc_timestamp,
     current_timestamp() AS _ingested_at,
     _rescued_data
 from stream read_files(
-    "/Volumes/olist_lakehouse/raw/olist/customers",
+    "/Volumes/olist_lakehouse/raw/olist/cdc/customers",
     format => "csv",
     header => true,
     inferschema => true,

@@ -1,4 +1,4 @@
-create or refresh streaming live table cdc_products_bronze
+create or refresh streaming live table olist_lakehouse.bronze.cdc_products_bronze
 comment 'bronze cdc table for products using auto loader and logical cdc flags'
 tblproperties (
   'quality' = 'bronze',
@@ -18,14 +18,15 @@ select
     product_width_cm,
 
     -- cdc control columns
-    'I' AS cdc_operation,
+    CAST(sequence_number AS BIGINT) AS sequence_number,
+    UPPER(TRIM(operation)) AS operation,
     _metadata.file_path AS _source_file,
     _metadata.file_modification_time AS _file_modified_at,
     current_timestamp() AS cdc_timestamp,
     current_timestamp() AS _ingested_at,
     _rescued_data
 from stream read_files(
-    "/Volumes/olist_lakehouse/raw/olist/products",
+    "/Volumes/olist_lakehouse/raw/olist/cdc/products",
     format => "csv",
     header => true,
     inferschema => true,
