@@ -17,7 +17,7 @@
 
   resources:
     pipelines:
-      olist_pipeline:
+      olist_pipeline_main:
         name: "[${bundle.target}] Olist Medallion Pipeline"
         catalog: ${var.catalog}
         target: ${var.schema}
@@ -34,6 +34,20 @@
               include: ./src/pipelines/bronze/**
           - glob:
               include: ./src/pipelines/silver/**
+          
+      olist_pipeline_cdc:
+        name: "[${bundle.target}] Olist Change Data Capture Pipeline"
+        catalog: ${var.catalog}
+        target: ${var.schema}
+        configuration:
+          layer_bronze: "bronze"
+          layer_silver: "silver"
+          layer_gold: "gold"
+        serverless: true
+        photon: true
+        channel: CURRENT
+        continuous: false
+        libraries:
           - glob:
               include: ./src/pipelines/cdc/**
 
