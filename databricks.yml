@@ -72,5 +72,5 @@
         schedule:
             quartz_cron_expression: "0 0/3 * * * ?"
             timezone_id: "UTC"
-            pause_status: "UNPAUSED"
+            pause_status: "PAUSED"
         
