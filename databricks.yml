@@ -64,12 +64,13 @@
 
     jobs:
       initial_setup:
-        name: "[${bundle.target}] Olist Infrastructure Setup"
+        name: "[${bundle.target}] Olist Data Generator"
         tasks:
-          - task_key: run_setup_scripts
-            notebook_task:
-              notebook_path: ./src/setup/run_notebook.ipynb
           - task_key: run_data_generator
             notebook_task:
               notebook_path: ./src/utils/data_generator.ipynb
+        schedule:
+            quartz_cron_expression: "0 0/3 * * * ?"
+            timezone_id: "UTC"
+            pause_status: "UNPAUSED"
         
