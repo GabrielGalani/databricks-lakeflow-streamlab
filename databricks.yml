@@ -8,6 +8,12 @@
       default: default
     bronze_layer:
       default: bronze
+    silver_layer:
+      default: silver
+    gold_layer:
+      default: gold
+    cdc_layer:
+      default: cdc
 
   targets:
     dev:
@@ -17,14 +23,15 @@
 
   resources:
     pipelines:
-      olist_pipeline:
+      olist_pipeline_main:
         name: "[${bundle.target}] Olist Medallion Pipeline"
         catalog: ${var.catalog}
         target: ${var.schema}
         configuration:
-          layer_bronze: "bronze"
-          layer_silver: "silver"
-          layer_gold: "gold"
+          layer_bronze: ${var.bronze_layer}
+          layer_silver: ${var.silver_layer}
+          layer_gold: ${var.gold_layer}
+          catalog: ${var.catalog}
         serverless: true
         photon: true
         channel: CURRENT
@@ -35,17 +42,35 @@
           - glob:
               include: ./src/pipelines/silver/**
           - glob:
+              include: ./src/pipelines/gold/**
+          
+      olist_pipeline_cdc:
+        name: "[${bundle.target}] Olist Change Data Capture Pipeline"
+        catalog: ${var.catalog}
+        target: ${var.schema}
+        configuration:
+          layer_bronze: ${var.bronze_layer}
+          layer_silver: ${var.silver_layer}
+          layer_gold: ${var.gold_layer}
+          layer_cdc: ${var.cdc_layer}
+          catalog: ${var.catalog}
+        serverless: true
+        photon: true
+        channel: CURRENT
+        continuous: false
+        libraries:
+          - glob:
               include: ./src/pipelines/cdc/**
 
     jobs:
       initial_setup:
-        name: "[${bundle.target}] Olist Infrastructure Setup"
-        environments:
-          - environment_key: Default
-            spec:
-              client: "1"
+        name: "[${bundle.target}] Olist Data Generator"
         tasks:
-          - task_key: run_setup_scripts
-            environment_key: Default
-            spark_python_task:
-              python_file: ./src/setup/run.py
+          - task_key: run_data_generator
+            notebook_task:
+              notebook_path: ./src/utils/data_generator.ipynb
+        schedule:
+            quartz_cron_expression: "0 0/3 * * * ?"
+            timezone_id: "UTC"
+            pause_status: "PAUSED"
+        

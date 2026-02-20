@@ -1,4 +1,4 @@
-create or refresh materialized view olist_lakehouse.silver.silver_orders_enriched
+create or refresh materialized view ${catalog}.${layer_silver}.silver_orders_enriched
 comment 'silver layer - enriched orders (1 row per order)'
 tblproperties ('quality' = 'silver')
 as
@@ -6,7 +6,7 @@ with order_items_agg as (
     select
         order_id,
         count(*) as total_items
-    from olist_lakehouse.silver.silver_orders_items
+    from ${catalog}.${layer_silver}.silver_orders_items
     group by order_id
 ),
 payments_agg as (
@@ -15,7 +15,7 @@ payments_agg as (
         count(*) as total_payments,
         sum(payment_value) as total_payment_value,
         max(is_credit_card) as used_credit_card
-    from olist_lakehouse.silver.silver_order_payments
+    from ${catalog}.${layer_silver}.silver_order_payments
     group by order_id
 ),
 reviews_agg as (
@@ -23,7 +23,7 @@ reviews_agg as (
         order_id,
         avg(review_score) as avg_review_score,
         max(has_comment) as has_review_comment
-    from olist_lakehouse.silver.silver_order_reviews
+    from ${catalog}.${layer_silver}.silver_order_reviews
     group by order_id
 )
 select
@@ -49,8 +49,8 @@ select
     o._ingested_at,
     current_timestamp() as _processed_at
 
-from olist_lakehouse.silver.silver_orders o
-left join olist_lakehouse.silver.silver_customers c on (o.customer_id = c.customer_id)
+from ${catalog}.${layer_silver}.silver_orders o
+left join ${catalog}.${layer_silver}.silver_customers c on (o.customer_id = c.customer_id)
 left join order_items_agg i on (o.order_id = i.order_id)
 left join payments_agg p on (o.order_id = p.order_id)
 left join reviews_agg r on (o.order_id = r.order_id);

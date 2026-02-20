@@ -1,4 +1,4 @@
-create or refresh streaming live table olist_lakehouse.bronze.cdc_sellers_bronze
+create or refresh streaming live table ${catalog}.${layer_cdc}.cdc_sellers_bronze
 comment 'bronze cdc table for sellers using auto loader and logical cdc pattern'
 tblproperties (
   'quality' = 'bronze',

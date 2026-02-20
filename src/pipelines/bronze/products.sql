@@ -1,4 +1,4 @@
-create or refresh streaming live table olist_lakehouse.bronze.bronze_products
+create or refresh streaming live table ${catalog}.${layer_bronze}.bronze_products
 comment 'bronze layer - raw products data ingested via auto loader'
 tblproperties (
   'quality' = 'bronze',
