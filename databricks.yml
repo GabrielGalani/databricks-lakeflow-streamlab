@@ -65,12 +65,11 @@
     jobs:
       initial_setup:
         name: "[${bundle.target}] Olist Infrastructure Setup"
-        environments:
-          - environment_key: Default
-            spec:
-              client: "1"
         tasks:
           - task_key: run_setup_scripts
-            environment_key: Default
-            spark_python_task:
-              python_file: ./src/setup/run.py
+            notebook_task:
+              notebook_path: ./src/setup/run_notebook.ipynb
+          - task_key: run_data_generator
+            notebook_task:
+              notebook_path: ./src/utils/data_generator.ipynb
+        
